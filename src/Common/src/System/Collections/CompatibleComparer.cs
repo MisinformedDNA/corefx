@@ -17,10 +17,6 @@ namespace System.Collections
             _comparer = comparer;
         }
 
-        internal IHashCodeProvider HashCodeProvider => _hcp;
-
-        internal IComparer Comparer => _comparer;
-
         public new bool Equals(object a, object b) => Compare(a, b) == 0;
 
         public int Compare(object a, object b)
