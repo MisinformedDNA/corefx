@@ -2,11 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-using Microsoft.Win32;
-using System;
-using System.Diagnostics;
 using System.Runtime.Serialization;
-using System.Security.Permissions;
 
 namespace System.ComponentModel
 {
@@ -42,7 +38,6 @@ namespace System.ComponentModel
         {
             LicensedType = type;
             _instance = instance;
-            HResult = HResults.License;
         }
         /// <summary>
         /// <para>Initializes a new instance of the <see cref='System.ComponentModel.LicenseException'/> class for the 
@@ -52,7 +47,6 @@ namespace System.ComponentModel
         {
             LicensedType = type;
             _instance = instance;
-            HResult = HResults.License;
         }
 
         /// <summary>

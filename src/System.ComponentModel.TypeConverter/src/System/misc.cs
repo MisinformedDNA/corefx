@@ -2,13 +2,8 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Reflection;
-using System.Security.Permissions;
-using System.Security;
 using System.Diagnostics;
+using System.Reflection;
 
 namespace System
 {
@@ -42,11 +37,6 @@ namespace System
             Type type = method.DeclaringType;
             return method.Invoke(target, args);
         }
-    }
-
-    internal static class HResults
-    {
-        internal const int License = unchecked((int)0x80131901);
     }
 }
 
