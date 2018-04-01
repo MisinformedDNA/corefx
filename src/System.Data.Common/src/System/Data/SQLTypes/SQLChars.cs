@@ -2,14 +2,14 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-using System.IO;
-using System.Diagnostics;
 using System.Data.Common;
+using System.Diagnostics;
+using System.IO;
+using System.Runtime.CompilerServices;
+using System.Runtime.Serialization;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
-using System.Runtime.Serialization;
-using System.Runtime.CompilerServices;
 
 namespace System.Data.SqlTypes
 {
@@ -620,14 +620,6 @@ namespace System.Data.SqlTypes
             {
                 CheckIfStreamClosed("get_Position");
                 return _lPosition;
-            }
-            set
-            {
-                CheckIfStreamClosed("set_Position");
-                if (value < 0 || value > _sqlchars.Length)
-                    throw new ArgumentOutOfRangeException(nameof(value));
-                else
-                    _lPosition = value;
             }
         }
 

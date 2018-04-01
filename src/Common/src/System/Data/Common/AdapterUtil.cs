@@ -11,7 +11,6 @@ using System.Security;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Transactions;
 
 namespace System.Data.Common
 {
@@ -130,61 +129,6 @@ namespace System.Data.Common
             return e;
         }
 
-        // the return value is true if the string was quoted and false if it was not
-        // this allows the caller to determine if it is an error or not for the quotedString to not be quoted
-        internal static bool RemoveStringQuotes(string quotePrefix, string quoteSuffix, string quotedString, out string unquotedString)
-        {
-            int prefixLength = quotePrefix != null ? quotePrefix.Length : 0;
-            int suffixLength = quoteSuffix != null ? quoteSuffix.Length : 0;
-
-            if ((suffixLength + prefixLength) == 0)
-            {
-                unquotedString = quotedString;
-                return true;
-            }
-
-            if (quotedString == null)
-            {
-                unquotedString = quotedString;
-                return false;
-            }
-
-            int quotedStringLength = quotedString.Length;
-
-            // is the source string too short to be quoted
-            if (quotedStringLength < prefixLength + suffixLength)
-            {
-                unquotedString = quotedString;
-                return false;
-            }
-
-            // is the prefix present?
-            if (prefixLength > 0)
-            {
-                if (!quotedString.StartsWith(quotePrefix, StringComparison.Ordinal))
-                {
-                    unquotedString = quotedString;
-                    return false;
-                }
-            }
-
-            // is the suffix present?
-            if (suffixLength > 0)
-            {
-                if (!quotedString.EndsWith(quoteSuffix, StringComparison.Ordinal))
-                {
-                    unquotedString = quotedString;
-                    return false;
-                }
-                unquotedString = quotedString.Substring(prefixLength, quotedStringLength - (prefixLength + suffixLength)).Replace(quoteSuffix + quoteSuffix, quoteSuffix);
-            }
-            else
-            {
-                unquotedString = quotedString.Substring(prefixLength, quotedStringLength - prefixLength);
-            }
-            return true;
-        }
-
         internal static ArgumentOutOfRangeException NotSupportedEnumerationValue(Type type, string value, string method)
         {
             return ArgumentOutOfRange(SR.Format(SR.ADP_NotSupportedEnumerationValue, type.Name, value, method), type.Name);
@@ -198,27 +142,6 @@ namespace System.Data.Common
         private static InvalidOperationException Provider(string error)
         {
             return InvalidOperation(error);
-        }
-
-        internal static ArgumentException InvalidMultipartName(string property, string value)
-        {
-            ArgumentException e = new ArgumentException(SR.Format(SR.ADP_InvalidMultipartName, property, value));
-            TraceExceptionAsReturnValue(e);
-            return e;
-        }
-
-        internal static ArgumentException InvalidMultipartNameIncorrectUsageOfQuotes(string property, string value)
-        {
-            ArgumentException e = new ArgumentException(SR.Format(SR.ADP_InvalidMultipartNameQuoteUsage, property, value));
-            TraceExceptionAsReturnValue(e);
-            return e;
-        }
-
-        internal static ArgumentException InvalidMultipartNameToManyParts(string property, string value, int limit)
-        {
-            ArgumentException e = new ArgumentException(SR.Format(SR.ADP_InvalidMultipartNameToManyParts, property, value, limit));
-            TraceExceptionAsReturnValue(e);
-            return e;
         }
 
         internal static void CheckArgumentNull(object value, string parameterName)
@@ -290,18 +213,6 @@ namespace System.Data.Common
         internal static ArgumentException ConvertFailed(Type fromType, Type toType, Exception innerException)
         {
             return ADP.Argument(SR.Format(SR.SqlConvert_ConvertFailed, fromType.FullName, toType.FullName), innerException);
-        }
-
-        //
-        // DbConnectionOptions, DataAccess, SqlClient
-        //
-        internal static Exception InvalidConnectionOptionValue(string key)
-        {
-            return InvalidConnectionOptionValue(key, null);
-        }
-        internal static Exception InvalidConnectionOptionValue(string key, Exception inner)
-        {
-            return Argument(SR.Format(SR.ADP_InvalidConnectionOptionValue, key), inner);
         }
 
         //
@@ -468,8 +379,6 @@ namespace System.Data.Common
 
         internal static int DstCompare(string strA, string strB) => CultureInfo.CurrentCulture.CompareInfo.Compare(strA, strB, ADP.DefaultCompareOptions);
 
-        internal static bool IsEmptyArray(string[] array) => (null == array) || (0 == array.Length);
-
         internal static bool IsNull(object value)
         {
             if ((null == value) || (DBNull.Value == value))
@@ -483,11 +392,6 @@ namespace System.Data.Common
         internal static Exception InvalidSeekOrigin(string parameterName)
         {
             return ArgumentOutOfRange(SR.ADP_InvalidSeekOrigin, parameterName);
-        }
-
-        internal static void SetCurrentTransaction(Transaction transaction)
-        {
-            Transaction.Current = transaction;
         }
     }
 }

@@ -2,10 +2,10 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-using System.Diagnostics;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Globalization;
 using System.Text;
 
@@ -313,14 +313,7 @@ namespace System.Data
             get
             {
                 RowPredicateFilter filter = (GetFilter() as RowPredicateFilter);
-                return ((null != filter) ? filter._predicateFilter : null);
-            }
-            set
-            {
-                if (!ReferenceEquals(RowPredicate, value))
-                {
-                    SetIndex(Sort, RowStateFilter, ((null != value) ? new RowPredicateFilter(value) : null));
-                }
+                return filter?._predicateFilter;
             }
         }
 
@@ -424,15 +417,6 @@ namespace System.Data
         internal System.Comparison<DataRow> SortComparison
         {
             get { return _comparison; }
-            set
-            {
-                DataCommonEventSource.Log.Trace("<ds.DataView.set_SortComparison|API> {0}", ObjectID);
-                if (!ReferenceEquals(_comparison, value))
-                {
-                    _comparison = value;
-                    SetIndex("", _recordStates, _rowFilter);
-                }
-            }
         }
 
         object ICollection.SyncRoot => this;

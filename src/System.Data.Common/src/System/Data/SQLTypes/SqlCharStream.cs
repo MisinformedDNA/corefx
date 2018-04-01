@@ -12,7 +12,7 @@ namespace System.Data.SqlTypes
 
         public abstract long Length { get; }
 
-        public abstract long Position { get; set; }
+        public abstract long Position { get; }
 
         // --------------------------------------------------------------
         //	  Public methods

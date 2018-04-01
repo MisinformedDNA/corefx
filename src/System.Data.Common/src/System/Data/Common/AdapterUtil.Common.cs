@@ -126,21 +126,6 @@ namespace System.Data.Common
             return InvalidEnumerationValue(typeof(DataRowState), (int)value);
         }
 
-        // KeyRestrictionBehavior
-        internal static ArgumentOutOfRangeException InvalidKeyRestrictionBehavior(KeyRestrictionBehavior value)
-        {
-#if DEBUG
-            switch (value)
-            {
-                case KeyRestrictionBehavior.PreventUsage:
-                case KeyRestrictionBehavior.AllowOnly:
-                    Debug.Assert(false, "valid KeyRestrictionBehavior " + value.ToString());
-                    break;
-            }
-#endif
-            return InvalidEnumerationValue(typeof(KeyRestrictionBehavior), (int)value);
-        }
-
         // IDataAdapter.FillLoadOption
         internal static ArgumentOutOfRangeException InvalidLoadOption(LoadOption value)
         {

@@ -43,7 +43,6 @@ namespace System.Data.ProviderBase
         protected abstract int VisibleFieldCount { get; }
 
         internal abstract Type GetFieldType(int ordinal);
-        internal abstract object GetValue(int ordinal);
         internal abstract int GetValues(object[] values);
 
         internal string GetName(int ordinal)
@@ -105,10 +104,7 @@ namespace System.Data.ProviderBase
                 Debug.Assert(null != fieldType, "null FieldType");
                 return fieldType;
             }
-            internal override object GetValue(int ordinal)
-            {
-                return _providerSpecificDataReader.GetProviderSpecificValue(ordinal);
-            }
+
             internal override int GetValues(object[] values)
             {
                 return _providerSpecificDataReader.GetProviderSpecificValues(values);
@@ -143,10 +139,7 @@ namespace System.Data.ProviderBase
             {
                 return _dataReader.GetFieldType(ordinal);
             }
-            internal override object GetValue(int ordinal)
-            {
-                return _dataReader.GetValue(ordinal);
-            }
+
             internal override int GetValues(object[] values)
             {
                 return _dataReader.GetValues(values);

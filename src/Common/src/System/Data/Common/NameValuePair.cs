@@ -21,15 +21,6 @@ namespace System.Data.Common
             _length = length;
         }
 
-        internal int Length
-        {
-            get
-            {
-                Debug.Assert(0 < _length, "NameValuePair zero Length usage");
-                return _length;
-            }
-        }
-
         internal string Name => _name;
         internal string Value => _value;
 

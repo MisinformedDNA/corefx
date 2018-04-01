@@ -649,15 +649,6 @@ namespace System.Data
         internal readonly int _argumentCount;
         internal readonly Type[] _parameters = new Type[] { null, null, null };
 
-        internal Function()
-        {
-            _name = null;
-            _id = FunctionId.none;
-            _result = null;
-            _isValidateArguments = false;
-            _argumentCount = 0;
-        }
-
         internal Function(string name, FunctionId id, Type result, bool IsValidateArguments,
                           bool IsVariantArgumentList, int argumentCount, Type a1, Type a2, Type a3)
         {

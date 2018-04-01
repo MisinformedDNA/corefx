@@ -39,7 +39,7 @@ namespace System.Data.Common
         {
             _useOdbcRules = useOdbcRules;
             _parsetable = new Dictionary<string, string>();
-            _usersConnectionString = ((null != connectionString) ? connectionString : "");
+            _usersConnectionString = (connectionString ?? "");
 
             // first pass on parsing, initial syntax check
             if (0 < _usersConnectionString.Length)
@@ -49,10 +49,6 @@ namespace System.Data.Common
                 _hasUserIdKeyword = (_parsetable.ContainsKey(KEY.User_ID) || _parsetable.ContainsKey(SYNONYM.UID));
             }
         }
-
-        internal Dictionary<string, string> Parsetable => _parsetable;
-
-        public string this[string keyword] => (string)_parsetable[keyword];
 
         internal static void AppendKeyValuePairBuilder(StringBuilder builder, string keyName, string keyValue, bool useOdbcRules)
         {
@@ -126,41 +122,6 @@ namespace System.Data.Common
                     builder.Append('\"');
                 }
             }
-        }
-
-        protected internal virtual string Expand() => _usersConnectionString;
-
-        internal string ExpandKeyword(string keyword, string replacementValue)
-        {
-            // preserve duplicates, updated keyword value with replacement value
-            // if keyword not specified, append to end of the string
-            bool expanded = false;
-            int copyPosition = 0;
-
-            var builder = new StringBuilder(_usersConnectionString.Length);
-            for (NameValuePair current = _keyChain; null != current; current = current.Next)
-            {
-                if ((current.Name == keyword) && (current.Value == this[keyword]))
-                {
-                    // only replace the parse end-result value instead of all values
-                    // so that when duplicate-keywords occur other original values remain in place
-                    AppendKeyValuePairBuilder(builder, current.Name, replacementValue, _useOdbcRules);
-                    builder.Append(';');
-                    expanded = true;
-                }
-                else
-                {
-                    builder.Append(_usersConnectionString, copyPosition, current.Length);
-                }
-                copyPosition += current.Length;
-            }
-
-            if (!expanded)
-            {
-                Debug.Assert(!_useOdbcRules, "ExpandKeyword not ready for Odbc");
-                AppendKeyValuePairBuilder(builder, keyword, replacementValue, _useOdbcRules);
-            }
-            return builder.ToString();
         }
 
         [Conditional("DEBUG")]

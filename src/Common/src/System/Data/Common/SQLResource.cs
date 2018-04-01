@@ -16,8 +16,6 @@ namespace System.Data.SqlTypes
     {
         internal static string NullString => SR.SqlMisc_NullString;
 
-        internal static string MessageString => SR.SqlMisc_MessageString;
-
         internal static string ArithOverflowMessage => SR.SqlMisc_ArithOverflowMessage;
 
         internal static string DivideByZeroMessage => SR.SqlMisc_DivideByZeroMessage;
@@ -31,10 +29,6 @@ namespace System.Data.SqlTypes
         internal static string ConcatDiffCollationMessage => SR.SqlMisc_ConcatDiffCollationMessage;
 
         internal static string CompareDiffCollationMessage => SR.SqlMisc_CompareDiffCollationMessage;
-
-        internal static string InvalidFlagMessage => SR.SqlMisc_InvalidFlagMessage;
-
-        internal static string NumeToDecOverflowMessage => SR.SqlMisc_NumeToDecOverflowMessage;
 
         internal static string ConversionOverflowMessage => SR.SqlMisc_ConversionOverflowMessage;
 

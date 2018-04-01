@@ -98,54 +98,6 @@ namespace System.Data.Common
         internal readonly NameValuePair _keyChain;
         internal readonly bool _hasPasswordKeyword;
 
-        public string UsersConnectionString(bool hidePassword) =>
-            UsersConnectionString(hidePassword, false);
-
-        private string UsersConnectionString(bool hidePassword, bool forceHidePassword)
-        {
-            string connectionString = _usersConnectionString;
-            if (_hasPasswordKeyword && (forceHidePassword || (hidePassword && !HasPersistablePassword)))
-            {
-                ReplacePasswordPwd(out connectionString, false);
-            }
-            return connectionString ?? string.Empty;
-        }
-
-        internal bool HasPersistablePassword => _hasPasswordKeyword ?
-            ConvertValueToBoolean(KEY.Persist_Security_Info, false) :
-            true; // no password means persistable password so we don't have to munge
-
-        public bool ConvertValueToBoolean(string keyName, bool defaultValue)
-        {
-            string value;
-            return _parsetable.TryGetValue(keyName, out value) ?
-                ConvertValueToBooleanInternal(keyName, value) :
-                defaultValue;
-        }
-
-        internal static bool ConvertValueToBooleanInternal(string keyName, string stringValue)
-        {
-            if (CompareInsensitiveInvariant(stringValue, "true") || CompareInsensitiveInvariant(stringValue, "yes"))
-                return true;
-            else if (CompareInsensitiveInvariant(stringValue, "false") || CompareInsensitiveInvariant(stringValue, "no"))
-                return false;
-            else
-            {
-                string tmp = stringValue.Trim();  // Remove leading & trailing whitespace.
-                if (CompareInsensitiveInvariant(tmp, "true") || CompareInsensitiveInvariant(tmp, "yes"))
-                    return true;
-                else if (CompareInsensitiveInvariant(tmp, "false") || CompareInsensitiveInvariant(tmp, "no"))
-                    return false;
-                else
-                {
-                    throw ADP.InvalidConnectionOptionValue(keyName);
-                }
-            }
-        }
-
-        private static bool CompareInsensitiveInvariant(string strvalue, string strconst) =>
-            (0 == StringComparer.OrdinalIgnoreCase.Compare(strvalue, strconst));
-
         [System.Diagnostics.Conditional("DEBUG")]
         static partial void DebugTraceKeyValuePair(string keyname, string keyvalue, Dictionary<string, string> synonyms);
 
@@ -599,54 +551,6 @@ namespace System.Data.Common
             ParseComparison(parsetable, connectionString, synonyms, firstKey, null);
 #endif
             return keychain;
-        }
-
-        internal NameValuePair ReplacePasswordPwd(out string constr, bool fakePassword)
-        {
-            bool expanded = false;
-            int copyPosition = 0;
-            NameValuePair head = null, tail = null, next = null;
-            StringBuilder builder = new StringBuilder(_usersConnectionString.Length);
-            for (NameValuePair current = _keyChain; null != current; current = current.Next)
-            {
-                if ((KEY.Password != current.Name) && (SYNONYM.Pwd != current.Name))
-                {
-                    builder.Append(_usersConnectionString, copyPosition, current.Length);
-                    if (fakePassword)
-                    {
-                        next = new NameValuePair(current.Name, current.Value, current.Length);
-                    }
-                }
-                else if (fakePassword)
-                {
-                    // replace user password/pwd value with *
-                    const string equalstar = "=*;";
-                    builder.Append(current.Name).Append(equalstar);
-                    next = new NameValuePair(current.Name, "*", current.Name.Length + equalstar.Length);
-                    expanded = true;
-                }
-                else
-                {
-                    // drop the password/pwd completely in returning for user
-                    expanded = true;
-                }
-
-                if (fakePassword)
-                {
-                    if (null != tail)
-                    {
-                        tail = tail.Next = next;
-                    }
-                    else
-                    {
-                        tail = head = next;
-                    }
-                }
-                copyPosition += current.Length;
-            }
-            Debug.Assert(expanded, "password/pwd was not removed");
-            constr = builder.ToString();
-            return head;
         }
     }
 }

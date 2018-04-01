@@ -15,7 +15,7 @@ namespace System.Data.Common
             IsReadOnly = isReadOnly;
         }
 
-        internal bool RefreshOnChange { get; set; }
+        internal bool RefreshOnChange { get; }
         public override Type ComponentType { get; }
         public override bool IsReadOnly { get; }
         public override Type PropertyType { get; }
